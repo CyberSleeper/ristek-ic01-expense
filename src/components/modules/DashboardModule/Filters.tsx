@@ -68,10 +68,10 @@ const Filters = () => {
 
       <span className="font-bold">Filter by Expenses Range</span>
 
-      <div className="flex gap-3 justify-center">
+      <div className="flex gap-3 mt-4 justify-center">
         <div className="block">
           <label htmlFor="min_price" className="block text-center">
-            <span>min</span>
+          <span><em>Min</em></span>
           </label>
           <input
             type="text"
@@ -83,7 +83,7 @@ const Filters = () => {
         <hr className="my-5 mt-9 h-[1px] w-10 border-black bg-black"/>
         <div className="block">
           <label htmlFor="max_price" className="block text-center">
-            <span>max</span>
+            <span><em>Max</em></span>
           </label>
           <input
             type="text"

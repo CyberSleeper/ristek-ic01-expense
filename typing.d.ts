@@ -20,3 +20,15 @@ interface PageProps {
   hasPreviousPage: boolean;
   hasNextPage: boolean;
 }
+
+interface DetailProps {
+  id: string;
+  name: string;
+  amount: number;
+  description: string;
+  created_at: string;
+  category: {
+    id: string;
+    name: string;
+  }
+}

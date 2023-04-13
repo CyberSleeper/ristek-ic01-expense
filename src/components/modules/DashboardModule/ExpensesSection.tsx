@@ -1,4 +1,5 @@
 import axios from "axios"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import ExpenseCard from "src/components/elements/ExpenseCard"
 
@@ -19,7 +20,9 @@ const ExpensesSection = () => {
       <ul className="h-[70vh] overflow-y-scroll scrollbar-hide flex flex-col gap-5">
         {
           expensesData?.data.map((val, index) => (
-            <ExpenseCard key = {index} {...val} />
+            <Link href={`detail/${val.id}`}>
+              <ExpenseCard key = {index} {...val}/>
+            </Link>
           ))
         }
       </ul>

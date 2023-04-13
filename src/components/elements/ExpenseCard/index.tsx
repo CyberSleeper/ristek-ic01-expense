@@ -1,6 +1,5 @@
 import HouseImage from '@images/HouseImage.svg'
 import Image from "next/image"
-import { DetailProps } from './interface'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { CurrencyDollarIcon } from '@icons'
