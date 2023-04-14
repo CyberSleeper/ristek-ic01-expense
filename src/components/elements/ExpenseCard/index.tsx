@@ -25,7 +25,7 @@ const ExpenseCard = ({id}: ExpenseProps) => {
         {detailData?.category.name === "Personal Spending" && <Image src="/assets/images/PersonalSpendingImage.svg" width={50} height={50} alt="" />}
         <div className='ml-4'>
           <div>
-            {detailData?.name}
+            {detailData?.category.name}
           </div>
           <div className='text-xl font-medium'>
             {detailData?.name}
