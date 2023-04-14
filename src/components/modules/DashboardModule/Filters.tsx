@@ -1,4 +1,4 @@
-import { FilterIcon } from "@icons"
+import { CurrencyDollarIcon, FilterIcon } from "@icons"
 import Image from "next/image"
 import { useContext, useEffect, useState } from "react"
 import { DashboardContext } from "src/components/Context/DashboardContext"
@@ -10,14 +10,14 @@ const Filters = () => {
   const housingId = "afc106af-2790-4df0-8ed2-473d6ef4b595";
   const personalSpendingId = "6bcd7235-717e-43b9-bed1-13e0b04e4c0b";
 
-  const ids = {
-    food: foodId,
-    transportation: transportationId,
-    housing: housingId,
-    personalSpending: personalSpendingId,
-  }
-
-  const { paramFilter, setParamFilter, setRefetch } = useContext(DashboardContext)
+  const { 
+    setParamFilter, 
+    setRefetch, 
+    maxPrice, 
+    setMaxPrice, 
+    minPrice, 
+    setMinPrice 
+  } = useContext(DashboardContext)
   const [stateFilter, setStateFilter] = useState<FilterProps>({
     food: false,
     personalSpending: false,
@@ -111,27 +111,47 @@ const Filters = () => {
 
       <div className="flex gap-3 mt-4 justify-center">
         <div className="block">
-          <label htmlFor="min_price" className="block text-center">
-          <span><em>Min</em></span>
-          </label>
-          <input
-            type="text"
-            id="min_price"
+          <div className="text-center">
+            <em>Min</em>
+          </div>
+          <div className="flex items-center">
+            <div className="p-1 border-2 border-black border-r-0 border-r-transparent rounded-l-md">
+              <CurrencyDollarIcon className="w-4 h-4" />
+            </div>
+            <input
+              type="number"
+              id="min_price"
             name="min_price"
-            className="block w-24 border-solid border-black border-2 rounded-md"
-          />
+              className="w-20 pl-1 border-solid border-y-black border-r-black border-l-0 rounded-l-none outline-none border-2 rounded-md"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setMinPrice(e.target.value)
+                setRefetch(true)
+                console.log(minPrice)
+              }}
+              />
+          </div>
         </div>
         <hr className="my-5 mt-9 h-[1px] w-10 border-black bg-black"/>
-        <div className="block">
-          <label htmlFor="max_price" className="block text-center">
-            <span><em>Max</em></span>
-          </label>
-          <input
-            type="text"
-            id="max_price"
-            name="max_price"
-            className="block w-24 border-solid border-black border-2 rounded-md"
-          />
+        <div className="block ">
+          <div className="text-center">
+            <em>Max</em>
+          </div>
+          <div className="flex items-center">
+            <div className="p-1 border-2 border-black border-r-0 border-r-transparent rounded-l-md">
+              <CurrencyDollarIcon className="w-4 h-4" />
+            </div>
+            <input
+              type="number"
+              id="max_price"
+              name="max_price"
+              className="w-20 pl-1 border-solid border-y-black border-r-black border-l-0 rounded-l-none outline-none border-2 rounded-md "
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setMaxPrice(e.target.value)
+                setRefetch(true)
+                console.log(maxPrice)
+              }}
+              />
+          </div>
         </div>
       </div>
     </div>
