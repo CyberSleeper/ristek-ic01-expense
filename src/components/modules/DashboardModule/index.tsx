@@ -1,10 +1,13 @@
 import CurrentExpenses from "./CurrentExpenses"
 import ExpensesSection from "./ExpensesSection"
 import Filters from "./Filters"
+import { createContext, useContext } from "react"
+import { DashboardProvider } from "src/components/Context/DashboardContext"
 
 export const DashboardModule: React.FC = () => {
   return (
     <>
+    <DashboardProvider>
     <div className="flex">
       <section className="w-[65%]">
         <ExpensesSection />
@@ -14,6 +17,7 @@ export const DashboardModule: React.FC = () => {
         <Filters />
       </aside>
     </div>
+    </DashboardProvider>
     </>
   )
 }

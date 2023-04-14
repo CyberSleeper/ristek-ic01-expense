@@ -1,7 +1,40 @@
 import { FilterIcon } from "@icons"
 import Image from "next/image"
+import { useContext, useEffect, useState } from "react"
+import { DashboardContext } from "src/components/Context/DashboardContext"
+import { FilterProps } from "./interface"
 
 const Filters = () => {
+  const foodId = "f12399a7-302c-452a-89d8-5ec21c4514e8";
+  const transportationId = "d8e6963a-b544-4c31-bc90-6bb3e15203e2";
+  const housingId = "afc106af-2790-4df0-8ed2-473d6ef4b595";
+  const personalSpendingId = "6bcd7235-717e-43b9-bed1-13e0b04e4c0b";
+
+  const ids = {
+    food: foodId,
+    transportation: transportationId,
+    housing: housingId,
+    personalSpending: personalSpendingId,
+  }
+
+  const { paramFilter, setParamFilter, setRefetch } = useContext(DashboardContext)
+  const [stateFilter, setStateFilter] = useState<FilterProps>({
+    food: false,
+    personalSpending: false,
+    transportation: false,
+    housing: false
+  })
+
+  useEffect(() => {
+    const urlFilter = (stateFilter.housing ? `,${housingId}` : "") + (stateFilter.food ? `,${foodId}` : "") + (stateFilter.transportation ? `,${transportationId}` : "") + (stateFilter.personalSpending ? `,${personalSpendingId}` : "")
+    if (urlFilter.charAt(0) === ',') {
+      setParamFilter(urlFilter.substring(1))
+    } else {
+      setParamFilter(urlFilter)
+    }
+    setRefetch(true)
+  }, [stateFilter])
+
   return (
     <div className="bg-white w-full rounded-lg mt-5 p-5">
       <div className="flex items-center gap-2">
@@ -18,9 +51,11 @@ const Filters = () => {
           <label htmlFor="housing" className="flex gap-1">
             <input
               type="checkbox"
-              // onChange={filterHandler}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setStateFilter({...stateFilter, housing: e.target.checked})
+              }}
               value="Housing"
-              id="2c056901-505d-4fb4-9bba-55aee6614f5f"
+              id={housingId}
             />
             <Image src="/assets/images/HouseImage.svg" width={20} height={20} alt="" />
             <span>Housing</span>
@@ -30,9 +65,11 @@ const Filters = () => {
           <label htmlFor="food" className="flex gap-1">
             <input
               type="checkbox"
-              // onChange={filterHandler}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setStateFilter({...stateFilter, food: e.target.checked})
+              }}
               value="Food"
-              id="1cc6910c-2199-4161-9cc2-4afbce992c62"
+              id={foodId}
             />
             <Image src="/assets/images/FoodImage.svg" width={20} height={20} alt="" />
             <span>Food</span>
@@ -42,9 +79,11 @@ const Filters = () => {
           <label htmlFor="transportation" className="flex gap-1">
             <input
               type="checkbox"
-              // onChange={filterHandler}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setStateFilter({...stateFilter, transportation: e.target.checked})
+              }}
               value="Transportation"
-              id="6a1f0505-a285-4481-92df-ffca07bbf76e"
+              id={transportationId}
             />
             <Image src="/assets/images/TransportationImage.svg" width={20} height={20} alt="" />
             <span>Transportation</span>
@@ -54,9 +93,11 @@ const Filters = () => {
           <label htmlFor="personal_spending" className="flex gap-1">
             <input
               type="checkbox"
-              // onChange={filterHandler}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setStateFilter({...stateFilter, personalSpending: e.target.checked})
+              }}
               value="Personal Spending"
-              id="7aa0a831-ddcc-4a95-b4b6-8ae4c236beaf"
+              id={personalSpendingId}
             />
             <Image src="/assets/images/PersonalSpendingImage.svg" width={20} height={20} alt="" />
             <span>Personal Spending</span>

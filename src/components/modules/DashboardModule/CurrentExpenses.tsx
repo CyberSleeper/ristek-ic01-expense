@@ -13,7 +13,7 @@ const CurrentExpenses = () => {
     }).catch(err => {
       console.log(err)
     })
-  })
+  }, [])
   return (
     <div className="bg-white mb-5 px-5 py-4 w-full rounded-lg">
       <h1 className="font-bold text-2xl">
