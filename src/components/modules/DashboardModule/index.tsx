@@ -1,7 +1,6 @@
 import CurrentExpenses from "./CurrentExpenses"
 import ExpensesSection from "./ExpensesSection"
 import Filters from "./Filters"
-import { createContext, useContext } from "react"
 import { DashboardProvider } from "src/components/Context/DashboardContext"
 
 export const DashboardModule: React.FC = () => {
