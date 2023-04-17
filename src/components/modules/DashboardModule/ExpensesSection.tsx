@@ -11,9 +11,10 @@ const ExpensesSection = () => {
   const { page } = router.query
   const [curPage, setCurPage] = useState(!page ? 1 : +page)
   useEffect(() => {
-    const { category_id, min_price, max_price } = router.query;
+    const { page, category_id, min_price, max_price } = router.query;
+    setCurPage(+page!)
     console.log(min_price)
-    const urlTarget = `https://utbmu5o3smxuba2iverkgqqj440temhn.lambda-url.ap-southeast-1.on.aws/expenses?page=${curPage}`
+    const urlTarget = `https://utbmu5o3smxuba2iverkgqqj440temhn.lambda-url.ap-southeast-1.on.aws/expenses?page=${page}`
       + (!category_id ? "" : `&category_id=${category_id}`)
       + (!min_price ? "" : `&min_price=${min_price}`)
       + (!max_price ? "" : `&max_price=${max_price}`)
