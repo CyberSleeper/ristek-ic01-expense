@@ -1,6 +1,5 @@
 import { FaArrowLeft } from "react-icons/fa"
 import { useRouter } from "next/router";
-import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import axios from "axios";
 import Image from "next/image";
@@ -8,6 +7,7 @@ import { CurrencyDollarIcon } from "@icons";
 import { currencyFormatter } from "@utils/currencyFormatter";
 
 export const DetailModule: React.FC = () => {
+  const router = useRouter();
   const routerQuery = useRouter().query;
   const [detailData, setDetailData] = useState<DetailProps>()
   useEffect(() => {
@@ -22,19 +22,14 @@ export const DetailModule: React.FC = () => {
   const createdAt = new Date(detailData?.created_at!);
   return (
     <>
-      <button type="button">
-        <Link href="/" className="flex items-center text-white font-bold gap-2">
+      <button onClick={() => void router.back()} className="flex items-center text-white font-bold gap-2">
             <FaArrowLeft size={25}/>
             <span className="text-3xl">Back</span>
-        </Link>
       </button>
       <article className="bg-white w-1/2 px-12 py-16 mx-auto rounded mt-4">
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
-            {detailData?.category.name === "Food" && <Image src="/assets/images/FoodImage.svg" width={50} height={50} alt="" />}
-            {detailData?.category.name === "Transportation" && <Image src="/assets/images/TransportationImage.svg" width={50} height={50} alt="" />}
-            {detailData?.category.name === "Housing" && <Image src="/assets/images/HouseImage.svg" width={50} height={50} alt="" />}
-            {detailData?.category.name === "Personal Spending" && <Image src="/assets/images/PersonalSpendingImage.svg" width={50} height={50} alt="" />}
+          <Image src={`/assets/images/${detailData?.category.id}.svg`} width={50} height={50} alt="" />
             <h1>
               {detailData?.name}
             </h1>

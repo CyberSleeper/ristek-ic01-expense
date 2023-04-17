@@ -27,8 +27,10 @@ interface DetailProps {
   amount: number;
   description: string;
   created_at: string;
-  category: {
-    id: string;
-    name: string;
-  }
+  category: CategoryProps;
+}
+
+interface CategoryProps {
+  id: string;
+  name: string;
 }

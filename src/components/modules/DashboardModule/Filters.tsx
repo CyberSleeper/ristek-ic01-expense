@@ -1,39 +1,66 @@
 import { CurrencyDollarIcon, FilterIcon } from "@icons"
 import Image from "next/image"
-import { useContext, useEffect, useState } from "react"
-import { DashboardContext } from "src/components/Context/DashboardContext"
-import { FilterProps } from "./interface"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { useRouter } from "next/router"
 
 const Filters = () => {
-  const foodId = "f12399a7-302c-452a-89d8-5ec21c4514e8";
-  const transportationId = "d8e6963a-b544-4c31-bc90-6bb3e15203e2";
-  const housingId = "afc106af-2790-4df0-8ed2-473d6ef4b595";
-  const personalSpendingId = "6bcd7235-717e-43b9-bed1-13e0b04e4c0b";
-
-  const { 
-    setParamFilter, 
-    setRefetch, 
-    maxPrice, 
-    setMaxPrice, 
-    minPrice, 
-    setMinPrice 
-  } = useContext(DashboardContext)
-  const [stateFilter, setStateFilter] = useState<FilterProps>({
-    food: false,
-    personalSpending: false,
-    transportation: false,
-    housing: false
-  })
-
+  const [allCategory, setAllCategory] = useState<CategoryProps[]>([])
   useEffect(() => {
-    const urlFilter = (stateFilter.housing ? `,${housingId}` : "") + (stateFilter.food ? `,${foodId}` : "") + (stateFilter.transportation ? `,${transportationId}` : "") + (stateFilter.personalSpending ? `,${personalSpendingId}` : "")
-    if (urlFilter.charAt(0) === ',') {
-      setParamFilter(urlFilter.substring(1))
+    axios.get("https://utbmu5o3smxuba2iverkgqqj440temhn.lambda-url.ap-southeast-1.on.aws/expenses/category")
+    .then(res => {
+      console.log(res.data)
+      setAllCategory(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }, [])
+
+  const router = useRouter();
+  const { category_id, min_price, max_price } = router.query;
+
+  const categoryArr = (category_id as string)?.split(",");
+  const categorySet = new Set(categoryArr);
+
+  const [categoryFilters, setCategoryFilters] = useState(categorySet);
+  
+  function updateFiltersCategory(checked: boolean, categoryFilter: CategoryProps) {
+    if (checked) {
+      setCategoryFilters((prev) => {
+        const next = new Set<string>(prev).add(categoryFilter.id)
+        updateParamCategory(next)
+        return next
+      });
     } else {
-      setParamFilter(urlFilter)
+      setCategoryFilters((prev) => {
+        const next = new Set<string>(prev);
+        console.log(next)
+        next.delete(categoryFilter.id);
+        console.log(next)
+        updateParamCategory(next)
+        return next;
+      })
     }
-    setRefetch(true)
-  }, [stateFilter])
+  }
+  
+  function updateParamCategory(filters: Set<string>) {
+    const paramCategory = Array.from(filters).join(',')
+    router.replace({
+      query: { ...router.query, category_id: paramCategory },
+    });
+  }
+
+  function updateFiltersMinPrice(val: number) {
+    router.replace({
+      query: { ...router.query, min_price: val }
+    })
+  }
+
+  function updateFiltersMaxPrice(val: number) {
+    router.replace({
+      query: { ...router.query, max_price: val }
+    })
+  }
 
   return (
     <div className="bg-white w-full rounded-lg mt-5 p-5">
@@ -47,62 +74,25 @@ const Filters = () => {
         Filter by Transaction Category
       </p>
       <ul className="flex flex-col gap-1">
-        <li>
-          <label htmlFor="housing" className="flex gap-1">
-            <input
-              type="checkbox"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setStateFilter({...stateFilter, housing: e.target.checked})
-              }}
-              value="Housing"
-              id={housingId}
-            />
-            <Image src="/assets/images/HouseImage.svg" width={20} height={20} alt="" />
-            <span>Housing</span>
-          </label>
-        </li>
-        <li>
-          <label htmlFor="food" className="flex gap-1">
-            <input
-              type="checkbox"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setStateFilter({...stateFilter, food: e.target.checked})
-              }}
-              value="Food"
-              id={foodId}
-            />
-            <Image src="/assets/images/FoodImage.svg" width={20} height={20} alt="" />
-            <span>Food</span>
-          </label>
-        </li>
-        <li>
-          <label htmlFor="transportation" className="flex gap-1">
-            <input
-              type="checkbox"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setStateFilter({...stateFilter, transportation: e.target.checked})
-              }}
-              value="Transportation"
-              id={transportationId}
-            />
-            <Image src="/assets/images/TransportationImage.svg" width={20} height={20} alt="" />
-            <span>Transportation</span>
-          </label>
-        </li>
-        <li>
-          <label htmlFor="personal_spending" className="flex gap-1">
-            <input
-              type="checkbox"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setStateFilter({...stateFilter, personalSpending: e.target.checked})
-              }}
-              value="Personal Spending"
-              id={personalSpendingId}
-            />
-            <Image src="/assets/images/PersonalSpendingImage.svg" width={20} height={20} alt="" />
-            <span>Personal Spending</span>
-          </label>
-        </li>
+        {
+          allCategory.map((val, index) => (
+            <li>
+              <div className="ms-2" key={index}>
+                <label className="flex gap-1">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => {
+                      updateFiltersCategory(e.target.checked, val);
+                    }}
+                    checked={categorySet.has(val.id)}
+                  />
+                  <Image src={`/assets/images/${val.id}.svg`} width={20} height={20} alt="" />
+                  {val.name}
+                </label>
+              </div>
+            </li>
+          ))
+        }
       </ul>
 
       <hr className="my-5 h-[1px] border-black bg-black"/>
@@ -116,18 +106,17 @@ const Filters = () => {
           </div>
           <div className="flex items-center">
             <div className="p-1 border-2 border-black border-r-0 border-r-transparent rounded-l-md">
-              <CurrencyDollarIcon className="w-4 h-4" />
+              <CurrencyDollarIcon size="w-4 h-4" />
             </div>
             <input
               type="number"
               id="min_price"
-            name="min_price"
+              name="min_price"
               className="w-20 pl-1 border-solid border-y-black border-r-black border-l-0 rounded-l-none outline-none border-2 rounded-md"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setMinPrice(e.target.value)
-                setRefetch(true)
-                console.log(minPrice)
+              onChange={(e) => {
+                updateFiltersMinPrice(e.target.valueAsNumber);
               }}
+              value={!min_price ? "" : min_price}
               />
           </div>
         </div>
@@ -138,18 +127,17 @@ const Filters = () => {
           </div>
           <div className="flex items-center">
             <div className="p-1 border-2 border-black border-r-0 border-r-transparent rounded-l-md">
-              <CurrencyDollarIcon className="w-4 h-4" />
+              <CurrencyDollarIcon size="w-4 h-4" />
             </div>
             <input
               type="number"
               id="max_price"
               name="max_price"
               className="w-20 pl-1 border-solid border-y-black border-r-black border-l-0 rounded-l-none outline-none border-2 rounded-md "
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setMaxPrice(e.target.value)
-                setRefetch(true)
-                console.log(maxPrice)
+              onChange={(e) => {
+                updateFiltersMaxPrice(e.target.valueAsNumber);
               }}
+              value={!max_price ? "" : max_price}
               />
           </div>
         </div>

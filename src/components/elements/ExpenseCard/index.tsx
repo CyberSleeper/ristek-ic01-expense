@@ -19,10 +19,7 @@ const ExpenseCard = ({id}: ExpenseProps) => {
   return (
     <div className="bg-white h-24 p-5 flex rounded-lg items-center justify-between">
       <div className='flex'>
-        {detailData?.category.name === "Food" && <Image src="/assets/images/FoodImage.svg" width={50} height={50} alt="" />}
-        {detailData?.category.name === "Transportation" && <Image src="/assets/images/TransportationImage.svg" width={50} height={50} alt="" />}
-        {detailData?.category.name === "Housing" && <Image src="/assets/images/HouseImage.svg" width={50} height={50} alt="" />}
-        {detailData?.category.name === "Personal Spending" && <Image src="/assets/images/PersonalSpendingImage.svg" width={50} height={50} alt="" />}
+        <Image src={`/assets/images/${detailData?.category.id}.svg`} width={50} height={50} alt="" />
         <div className='ml-4'>
           <div>
             {detailData?.category.name}
